@@ -8,6 +8,7 @@
     <title>個人作品集</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollToPlugin.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -203,8 +204,7 @@
             justify-content: space-between;
             align-items: stretch;
             height: 100vh;
-            position: sticky;
-            top: 70px;
+            position: relative;
             z-index: 90;
         }
 
@@ -256,13 +256,13 @@
             color: #D4A017;
             opacity: 1;
         }
-        
+
         .project-item.active {
             color: #D4A017;
             opacity: 1;
             position: relative;
         }
-        
+
         .project-item.active:before {
             content: '';
             position: absolute;
@@ -282,15 +282,15 @@
             position: relative;
             z-index: 112;
         }
-        
+
         .project-details-wrapper {
             position: relative;
             min-height: 150px;
             max-width: 80%;
             z-index: 111;
         }
-        
-        .project-details, 
+
+        .project-details,
         .project-details-bg {
             position: absolute;
             top: 0;
@@ -298,7 +298,7 @@
             width: 100%;
             transition: opacity 0.5s ease;
         }
-        
+
         .project-details-bg {
             z-index: 110;
             pointer-events: none;
@@ -392,7 +392,6 @@
                 flex-direction: column;
                 height: auto;
                 min-height: 100vh;
-                top: 60px;
             }
 
             .projects-image,
@@ -405,26 +404,22 @@
                 height: 300px;
                 margin-bottom: 20px;
             }
-            
+
             .projects-image-bg {
                 height: 300px;
             }
-            
+
             .project-details {
                 text-align: center;
                 padding-left: 0;
             }
-            
+
             .project-details-bg {
                 text-align: center;
             }
-            
+
             .project-description {
                 max-width: 100%;
-            }
-            
-            .project-section {
-                height: 100vh;
             }
         }
 
@@ -434,7 +429,7 @@
             width: 100%;
             position: relative;
         }
-        
+
         /* 項目區標題 */
         .projects-heading {
             text-align: center;
@@ -447,27 +442,13 @@
             font-size: 36px;
         }
 
-        /* 偵錯用 - 生產環境可移除 */
-        .debug-marker {
-            position: absolute;
-            left: 10px;
-            padding: 5px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            font-size: 12px;
-            z-index: 999;
-        }
-        .start-marker { top: 0; }
-        .mid-marker { top: 50%; }
-        .end-marker { bottom: 0; }
-
-        /* 新增部分樣式 */
+        /* 時間軸樣式 */
         .timeline {
             max-width: 800px;
             margin: 0 auto;
             position: relative;
         }
-        
+
         .timeline::before {
             content: '';
             position: absolute;
@@ -476,14 +457,14 @@
             height: 100%;
             background: #D4A017;
         }
-        
+
         .timeline-item {
             margin-bottom: 50px;
             position: relative;
             display: flex;
             justify-content: space-between;
         }
-        
+
         .timeline-content {
             width: 45%;
             padding: 20px;
@@ -491,13 +472,13 @@
             border-radius: 5px;
             text-align: left;
         }
-        
+
         .timeline-date {
             color: #D4A017;
             font-weight: bold;
             margin-bottom: 10px;
         }
-        
+
         .certificate-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -505,46 +486,46 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .certificate-card {
             background: rgba(0, 0, 0, 0.7);
             padding: 25px;
             border-radius: 5px;
             transition: transform 0.3s ease;
         }
-        
+
         .certificate-card:hover {
             transform: translateY(-10px);
         }
-        
+
         .certificate-icon {
             font-size: 40px;
             color: #D4A017;
             margin-bottom: 15px;
         }
-        
+
         .skills-container {
             max-width: 800px;
             margin: 0 auto;
         }
-        
+
         .skill-category {
             margin-bottom: 40px;
             text-align: left;
         }
-        
+
         .skill-title {
             color: #D4A017;
             margin-bottom: 15px;
             font-size: 1.3rem;
         }
-        
+
         .skill-list {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
         }
-        
+
         .skill-item {
             padding: 8px 15px;
             background: rgba(212, 160, 23, 0.2);
@@ -552,16 +533,56 @@
             font-size: 0.9rem;
             transition: background 0.3s ease;
         }
-        
+
         .skill-item:hover {
             background: rgba(212, 160, 23, 0.4);
+        }
+
+        .projects-scroll-container {
+            height: 100vh;
+            overflow-y: scroll;
+            position: relative;
+            scroll-behavior: smooth;
+        }
+
+        .projects-scroll-content {
+            height: calc(100vh * 8); /* Extended to 8 viewport heights for longer scroll */
+        }
+
+        /* 美化滾動條 */
+        .projects-scroll-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .projects-scroll-container::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+
+        .projects-scroll-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 行動裝置調整 */
+        @media (max-width: 768px) {
+            .projects-scroll-container {
+                height: 100vh;
+            }
+
+            .projects-scroll-content {
+                height: calc(100vh * 8); /* Consistent extended height for mobile */
+            }
+
+            .project-section {
+                height: 100vh;
+            }
         }
     </style>
 </head>
 <body>
     <!-- 導航欄 -->
     <nav class="navbar">
-        <a href="#" class="logo">Portfolio</a>
+        <a href="#" class="logo">Porfile</a>
         <div class="menu-toggle">
             <span></span>
             <span></span>
@@ -570,7 +591,7 @@
         <ul class="nav-links">
             <li><a href="#home">首頁</a></li>
             <li><a href="#about">關於</a></li>
-            <li><a href="#projects">項目</a></li>
+            <li><a href="#projects">作品</a></li>
             <li><a href="#experience">經歷</a></li>
             <li><a href="#certificates">證書</a></li>
             <li><a href="#skills">能力</a></li>
@@ -581,8 +602,8 @@
     <section id="home" class="hero">
         <div class="hero-bg"></div>
         <div class="hero-content">
-            <h1 class="hero-title">你的名字</h1>
-            <h2 class="hero-subtitle">設計師</h2>
+            <h1 class="hero-title">葉承翰</h1>
+            <h2 class="hero-subtitle">全端工程師</h2>
         </div>
     </section>
 
@@ -606,46 +627,36 @@
     <!-- 項目部分 -->
     <section id="projects">
         <h2 class="projects-heading">我的項目</h2>
-        
-        <!-- 固定顯示區域 -->
-        <div class="projects-container">
-            <!-- 背景圖片層 -->
-            <div class="projects-image-bg"></div>
-            
-            <!-- 左側：圖片展示 -->
-            <div class="projects-image"></div>
-            
-            <!-- 右側：項目標題列表和詳情 -->
-            <div class="projects-content">
-                <ul class="project-list">
-                    <li class="project-item active" data-index="0">企業網站設計</li>
-                    <li class="project-item" data-index="1">電子商務應用</li>
-                    <li class="project-item" data-index="2">品牌識別設計</li>
-                    <li class="project-item" data-index="3">行動應用UI/UX</li>
-                </ul>
-                
-                <!-- 詳情容器包裝 -->
-                <div class="project-details-wrapper">
-                    <!-- 當前顯示的詳情 -->
-                    <div class="project-details">
-                        <h3 class="project-title">企業網站設計</h3>
-                        <p class="project-description">為一家科技公司設計的現代響應式網站，包括自定義動畫和互動元素。該項目使用HTML, CSS, JavaScript和GSAP開發。</p>
-                    </div>
-                    
-                    <!-- 背景詳情層 -->
-                    <div class="project-details-bg">
-                        <h3 class="project-title">企業網站設計</h3>
-                        <p class="project-description">為一家科技公司設計的現代響應式網站，包括自定義動畫和互動元素。該項目使用HTML, CSS, JavaScript和GSAP開發。</p>
+        <div class="projects-scroll-container">
+            <div class="projects-container">
+                <div class="projects-image-bg"></div>
+                <div class="projects-image"></div>
+                <div class="projects-content">
+                    <ul class="project-list">
+                        <li class="project-item active" data-index="0">企業網站設計</li>
+                        <li class="project-item" data-index="1">電子商務應用</li>
+                        <li class="project-item" data-index="2">品牌識別設計</li>
+                        <li class="project-item" data-index="3">行動應用UI/UX</li>
+                    </ul>
+                    <div class="project-details-wrapper">
+                        <div class="project-details">
+                            <h3 class="project-title">企業網站設計</h3>
+                            <p class="project-description">為一家科技公司設計的現代響應式網站，包括自定義動畫和互動元素。該項目使用HTML, CSS, JavaScript和GSAP開發。</p>
+                        </div>
+                        <div class="project-details-bg">
+                            <h3 class="project-title">企業網站設計</h3>
+                            <p class="project-description">為一家科技公司設計的現代響應式網站，包括自定義動畫和互動元素。該項目使用HTML, CSS, JavaScript和GSAP開發。</p>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="projects-scroll-content">
+                <div class="project-section" id="project-section-0"></div>
+                <div class="project-section" id="project-section-1"></div>
+                <div class="project-section" id="project-section-2"></div>
+                <div class="project-section" id="project-section-3"></div>
+            </div>
         </div>
-        
-        <!-- 滾動觸發區 -->
-        <div class="project-section" id="project-section-0"></div>
-        <div class="project-section" id="project-section-1"></div>
-        <div class="project-section" id="project-section-2"></div>
-        <div class="project-section" id="project-section-3"></div>
     </section>
 
     <!-- 經歷部分 -->
@@ -660,16 +671,15 @@
                     <p>負責設計和開發用戶界面，創建用戶體驗原型，並與開發團隊協作實現設計方案。</p>
                 </div>
             </div>
-            
             <div class="timeline-item">
                 <div class="timeline-content">
                     <div class="timeline-date">2018 - 2021</div>
-                    <h3>網頁設計師</h3>
+                    <h3>網滴答作響
                     <p>數位行銷公司</p>
                     <p>設計和開發響應式網站，創建品牌識別，優化用戶體驗和網站性能。</p>
                 </div>
             </div>
-            
+            <!--我是註解
             <div class="timeline-item">
                 <div class="timeline-content">
                     <div class="timeline-date">2016 - 2018</div>
@@ -677,7 +687,7 @@
                     <p>創意設計工作室</p>
                     <p>協助創建品牌形象，設計宣傳材料，學習行業最佳實踐。</p>
                 </div>
-            </div>
+            </div>-->
         </div>
     </section>
 
@@ -691,14 +701,12 @@
                 <p>Google | 2022</p>
                 <p>完成了七門課程，涵蓋設計思維、用戶研究、線框圖和原型設計等主題。</p>
             </div>
-            
             <div class="certificate-card">
                 <div class="certificate-icon">🏆</div>
                 <h3>前端Web開發認證</h3>
                 <p>freeCodeCamp | 2021</p>
                 <p>掌握HTML5、CSS3、JavaScript、響應式設計和前端庫。</p>
             </div>
-            
             <div class="certificate-card">
                 <div class="certificate-icon">🏆</div>
                 <h3>Adobe認證專家</h3>
@@ -723,7 +731,6 @@
                     <span class="skill-item">使用者研究</span>
                 </div>
             </div>
-            
             <div class="skill-category">
                 <h3 class="skill-title">開發</h3>
                 <div class="skill-list">
@@ -735,7 +742,6 @@
                     <span class="skill-item">Responsive Design</span>
                 </div>
             </div>
-            
             <div class="skill-category">
                 <h3 class="skill-title">工具</h3>
                 <div class="skill-list">
@@ -757,18 +763,17 @@
 
     <script>
         // 初始化 GSAP 和 ScrollTrigger
-        gsap.registerPlugin(ScrollTrigger);
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
         // 漢堡選單功能
         const menuToggle = document.querySelector('.menu-toggle');
         const navLinks = document.querySelector('.nav-links');
-        
+
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
         });
 
-        // 導航連結點擊關閉選單
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
@@ -805,6 +810,12 @@
             duration: 1
         });
 
+        // 設置 ScrollTrigger 的 scroller
+        const scrollContainer = document.querySelector('.projects-scroll-container');
+        ScrollTrigger.defaults({
+            scroller: scrollContainer
+        });
+
         // 項目資料
         const projects = [
             {
@@ -838,7 +849,7 @@
         const projectDescriptionBg = document.querySelector('.project-details-bg .project-description');
         const projectsImage = document.querySelector('.projects-image');
         const projectsImageBg = document.querySelector('.projects-image-bg');
-        
+
         // 設置初始背景
         projectsImage.style.backgroundImage = `url(${projects[0].image})`;
         projectsImageBg.style.backgroundImage = `url(${projects[0].image})`;
@@ -848,61 +859,82 @@
             item.addEventListener('click', () => {
                 updateActiveItem(index);
                 updateProject(index, true);
-                
-                // 點擊後滾動到該項目區域
-                document.getElementById(`project-section-${index}`).scrollIntoView({
-                    behavior: 'smooth'
+                gsap.to(scrollContainer, {
+                    scrollTo: {
+                        y: (index * window.innerHeight * 2),
+                        offsetY: 0
+                    },
+                    duration: 1
                 });
+                console.log(`Clicked project ${index}, scrolling to position ${index * window.innerHeight * 2}`);
             });
         });
 
-        // 設置 ScrollTrigger
-        gsap.registerPlugin(ScrollTrigger);
-        
-        // 標誌是否正在進行過渡
-        let isTransitioning = false;
-        
-        projects.forEach((project, index) => {
-            ScrollTrigger.create({
-                trigger: `#project-section-${index}`,
-                start: "top center",
-                end: "bottom center",
-                onEnter: () => {
-                    if (!isTransitioning) {
-                        updateActiveItem(index);
-                        updateProject(index);
-                    }
-                },
-                onEnterBack: () => {
-                    if (!isTransitioning) {
-                        updateActiveItem(index);
-                        updateProject(index);
-                    }
-                }
-            });
-        });
+// 設置 ScrollTrigger
+let isTransitioning = false;
+let currentIndex = 0;
+
+const totalScrollHeight = window.innerHeight * 8; // Total scroll height (8vh)
+const sectionHeight = totalScrollHeight / projects.length; // 2vh per project
+
+// Use a single ScrollTrigger for all projects
+ScrollTrigger.create({
+    trigger: ".projects-scroll-content",
+    scroller: scrollContainer,
+    start: "top top",
+    end: `+=${totalScrollHeight}`,
+    onUpdate: (self) => {
+        const progress = self.progress; // 0 to 1 over 8vh
+        const newIndex = Math.min(
+            Math.floor(progress * projects.length),
+            projects.length - 1
+        );
+        if (!isTransitioning && currentIndex !== newIndex) {
+            console.log(`Scroll progress: ${progress}, switching to project ${newIndex}`);
+            currentIndex = newIndex;
+            updateActiveItem(newIndex);
+            updateProject(newIndex);
+        }
+    }
+});
+
+// 設置固定效果
+ScrollTrigger.create({
+    trigger: ".projects-container",
+    scroller: scrollContainer,
+    start: "top top",
+    end: `+=${totalScrollHeight - window.innerHeight}`,
+    pin: true,
+    pinSpacing: false,
+    onEnter: () => console.log("Pinned projects-container"),
+    onLeave: () => console.log("Unpinned projects-container")
+});
 
         // 更新活動項目樣式
         function updateActiveItem(index) {
             projectItems.forEach(item => item.classList.remove('active'));
             projectItems[index].classList.add('active');
+            console.log(`Active item updated to ${index}`);
         }
 
         // 更新項目內容 - 文字和圖片平滑過渡
         function updateProject(index, immediate = false) {
-            if (isTransitioning) return;
+            if (isTransitioning) {
+                console.log(`Transition in progress, skipping update for project ${index}`);
+                return;
+            }
             isTransitioning = true;
-            
+
             const project = projects[index];
             const duration = immediate ? 0.3 : 0.5;
-            
+
             // 圖片過渡
             projectsImageBg.style.backgroundImage = projectsImage.style.backgroundImage;
-            
+
             // 文字過渡 - 先將當前內容複製到背景層
             projectTitleBg.textContent = projectTitle.textContent;
             projectDescriptionBg.textContent = projectDescription.textContent;
-            
+
             // 執行兩個元素的並行淡出
             gsap.to([projectsImage, '.project-details'], {
                 opacity: 0,
@@ -912,7 +944,7 @@
                     projectsImage.style.backgroundImage = `url(${project.image})`;
                     projectTitle.textContent = project.title;
                     projectDescription.textContent = project.description;
-                    
+
                     // 淡入新內容
                     gsap.to([projectsImage, '.project-details'], {
                         opacity: 1,
@@ -921,6 +953,7 @@
                             // 確保背景層隱藏
                             gsap.set('.project-details-bg', { opacity: 0 });
                             isTransitioning = false;
+                            console.log(`Transition complete for project ${index}`);
                         }
                     });
                 }
@@ -929,15 +962,6 @@
 
         // 初始設置
         updateProject(0);
-
-        // 使項目容器在滾動時保持固定
-        ScrollTrigger.create({
-            trigger: "#projects",
-            start: "top top",
-            end: `+=${window.innerHeight * 4}`, // 4 projects, each 100vh
-            pin: ".projects-container",
-            pinSpacing: true
-        });
 
         // 為新增部分添加動畫
         gsap.from(".timeline-item", {
@@ -950,7 +974,7 @@
             stagger: 0.3,
             duration: 0.8
         });
-        
+
         gsap.from(".certificate-card", {
             scrollTrigger: {
                 trigger: "#certificates",
@@ -961,7 +985,7 @@
             stagger: 0.2,
             duration: 0.8
         });
-        
+
         gsap.from(".skill-category", {
             scrollTrigger: {
                 trigger: "#skills",
